@@ -70,5 +70,11 @@
             <version>5.4.13.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
     </dependencies>
 </project>
