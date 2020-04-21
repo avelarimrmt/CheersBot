@@ -1,8 +1,11 @@
 import com.vdurmont.emoji.EmojiParser;
+
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -59,8 +62,10 @@ public class Bot extends TelegramLongPollingBot {
         s.setReplyToMessageId(message.getMessageId()); //Определяем, на какое сообщение отвечаем
         s.setText(text);
         //String msg = "SELECT value_toast FROM toasts ORDER BY RANDOM() limit 1;";
+        setMainButtons(s);
+
         try{
-            setButtons(s); //появление клавиатуры после сообщения
+            //setMainButtons(s); //появление клавиатуры после сообщения
             execute(s);
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -73,28 +78,84 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
         if(message != null && message.hasText()){
+            Long chatId = update.getMessage().getChatId();
             switch(message.getText()){
-                case "/help":
-                    sendMessageReply(message, "Чем могу помочь?");
-                            break;
-                case "/settings":
-                    sendMessageReply(message, "Что будем настраивать?");
-                        break;
-                case "Привет!":
+                case "Сгенерировать тост":
                     try {
                         execute(sendProfessionInlineKeyBoardMessage(update.getMessage().getChatId()));
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
                     break;
+                case "\uD83C\uDF7EМои тосты":
+                    sendMessageReply(message, "Это ваши сохраненные тосты");
+                    break;
+                case "⭐Избранное":
+                    sendMessageReply(message, "Здесь ваши самые любимые тосты!");
+                    break;
+                case "\uD83C\uDFC6ТОП тостов":
+                    sendMessageReply(message, "Посмотрите самые популярные тосты за месяц!");
+                    break;
+                case "✍Добавить свой тост":
+                    sendMessageReply(message, "Напишите свой тост и добавьте его для всех пользователей!");
+                    break;
+                case "✌Мой рейтинг":
+                    sendMessageReply(message, "Здесь ваш рейтинг тостов");
+                    break;
+                case "\uD83D\uDE4FПомощь":
+                    sendMessageReply(message, "Чем могу помочь?");
+                    break;
+                case "/":
+                    try {
+                        execute(sendGenreInlineKeyBoardMessage(update.getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
-                    sendMessageReply(message, "Говно, отвечай нормально");
+                    sendMessageReply(message, "Привет! Нажми кнопку в меню \"Сгенерировать тост\"");
                     break;
             }
+        } else if (update.hasCallbackQuery())
+        {
+            String call_data = update.getCallbackQuery().getData();
+            long message_id = update.getCallbackQuery().getMessage().getMessageId();
+            long chat_id = update.getCallbackQuery().getMessage().getChatId();
+            CallbackQuery d = update.getCallbackQuery();
+            System.out.println(d.getData());
+            EditMessageText new_message = sendGenreInlineKeyBoardMessage(chat_id).setMessageId(toIntExact(message_id));
+            try {
+                execute(new_message);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+
+            switch (d.getData()){
+                case "Журналист":
+                    System.out.println("done");
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Журналист, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                    /*new SendMessage().setText(
+                                update.getCallbackQuery().getData())
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId())
+                    try {
+                    execute(sendGenreInlineKeyBoardMessage(update.getMessage().getChatId()));
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }*/
+            }
+
+
+
         }
     }
 
-    public void setButtons (SendMessage sendMessage) {
+    public void setMainButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(keyboardMarkup); //связываем сообщение с клавиатурой
         keyboardMarkup.setSelective(true); //для всех пользователей
@@ -109,7 +170,8 @@ public class Bot extends TelegramLongPollingBot {
         KeyboardRow keyboard5Row = new KeyboardRow();
         KeyboardRow keyboard6Row = new KeyboardRow();
 
-        keyboard1Row.add(new KeyboardButton(Icon.GLASS.get() + "Мои тосты"));
+        keyboard1Row.add(new KeyboardButton("Сгенерировать тост"));
+        keyboard2Row.add(new KeyboardButton(Icon.GLASS.get() + "Мои тосты"));
         keyboard2Row.add(new KeyboardButton(Icon.STAR.get() + "Избранное"));
         keyboard3Row.add(new KeyboardButton(Icon.CUP.get() + "ТОП тостов"));
         keyboard4Row.add(new KeyboardButton(Icon.WRITE.get() + "Добавить свой тост"));
@@ -127,12 +189,10 @@ public class Bot extends TelegramLongPollingBot {
 
     public static SendMessage sendProfessionInlineKeyBoardMessage(long chatId){
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
 
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Журналист")); //добавление кнопки без объявления переменной
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Журналист"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Строитель"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("3").setCallbackData("Программист"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("4").setCallbackData("Врач"));
@@ -147,6 +207,28 @@ public class Bot extends TelegramLongPollingBot {
         rowList.add(keyboardButtonsRow2);
         inlineKeyboardMarkup.setKeyboard(rowList); //добавляем кнопки в разметку инлайн клавиатуры
         return new SendMessage().setChatId(chatId).setText("Выбери ПРОФЕССИЮ из списка:\n1. Журналист\n2. Строитель\n3. Программист\n4. Врач\n5. Полицейский\n6. Учитель\n7. Архитектор\n8. Бухгалтер\n9. Юрист\n10. Дизайнер").setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
+    }
+
+    public static EditMessageText sendGenreInlineKeyBoardMessage(long chatId){
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Смешные"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Душевные"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("3").setCallbackData("Серьезные"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("4").setCallbackData("В стихах"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("5").setCallbackData("Диалог"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("6").setCallbackData("Длинные"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("7").setCallbackData("Короткие"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("8").setCallbackData("В прозе"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("РАНДОМ").setCallbackData("Рандом"));
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        rowList.add(keyboardButtonsRow2);
+        inlineKeyboardMarkup.setKeyboard(rowList); //добавляем кнопки в разметку инлайн клавиатуры
+        return new EditMessageText().setText("Выбери ЖАНР из списка:\n1. Смешные \n2. Душевные \n3. Серьезные \n4. В стихах \n5. Диалог \n6. Длинные \n7. Короткие \n8. В прозе").setChatId(chatId).setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
     }
 
     public String getBotUsername() {
