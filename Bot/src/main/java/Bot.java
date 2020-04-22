@@ -19,6 +19,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.toIntExact;
+
 //import static java.awt.DefaultKeyboardFocusManager.sendMessage;
 
 //Смайлики, используемые в сообщениях и кнопках
@@ -87,7 +89,7 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                     break;
-                case "\uD83C\uDF7EМои тосты":
+                /*case "\uD83C\uDF7EМои тосты":
                     sendMessageReply(message, "Это ваши сохраненные тосты");
                     break;
                 case "⭐Избранное":
@@ -101,9 +103,13 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "✌Мой рейтинг":
                     sendMessageReply(message, "Здесь ваш рейтинг тостов");
-                    break;
+                    break;*/
                 case "\uD83D\uDE4FПомощь":
-                    sendMessageReply(message, "Чем могу помочь?");
+                    sendMessageReply(message, "Чтобы получить тост:\n" +
+                            "1)\tнажмите кнопку «Сгенерировать тост»\n" +
+                            "2)\tзатем выберите профессию, кликнув по нужному номеру профессии\n" +
+                            "3)\tдалее выберите жанр, кликнув по номеру жанра или нажмите на кнопку «РАНДОМ», чтобы не ограничиваться жанром.\n" +
+                            "По всем вопросам и пожеланиям пишите @mrm\\_avelari");
                     break;
                 case "/":
                     try {
@@ -131,10 +137,10 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             switch (d.getData()){
-                case "Журналист":
+                case "Полицейский":
                     System.out.println("done");
                     try {
-                        execute(new SendMessage().setText("Вы выбрали профессию Журналист, теперь выберите жанр тоста выше")
+                        execute(new SendMessage().setText("Вы выбрали профессию Полицейский, теперь выберите жанр тоста выше")
                                 .setChatId(update.getCallbackQuery().getMessage().getChatId()));
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
@@ -164,25 +170,25 @@ public class Bot extends TelegramLongPollingBot {
 
         ArrayList<KeyboardRow> keyboardRowList = new ArrayList<>();
         KeyboardRow keyboard1Row = new KeyboardRow();
-        KeyboardRow keyboard2Row = new KeyboardRow();
+/*        KeyboardRow keyboard2Row = new KeyboardRow();
         KeyboardRow keyboard3Row = new KeyboardRow();
         KeyboardRow keyboard4Row = new KeyboardRow();
-        KeyboardRow keyboard5Row = new KeyboardRow();
+        KeyboardRow keyboard5Row = new KeyboardRow();*/
         KeyboardRow keyboard6Row = new KeyboardRow();
 
         keyboard1Row.add(new KeyboardButton("Сгенерировать тост"));
-        keyboard2Row.add(new KeyboardButton(Icon.GLASS.get() + "Мои тосты"));
+/*        keyboard2Row.add(new KeyboardButton(Icon.GLASS.get() + "Мои тосты"));
         keyboard2Row.add(new KeyboardButton(Icon.STAR.get() + "Избранное"));
         keyboard3Row.add(new KeyboardButton(Icon.CUP.get() + "ТОП тостов"));
         keyboard4Row.add(new KeyboardButton(Icon.WRITE.get() + "Добавить свой тост"));
-        keyboard5Row.add(new KeyboardButton(Icon.PEACE.get() + "Мой рейтинг"));
+        keyboard5Row.add(new KeyboardButton(Icon.PEACE.get() + "Мой рейтинг"));*/
         keyboard6Row.add(new KeyboardButton(Icon.HELP.get() + "Помощь"));
 
         keyboardRowList.add(keyboard1Row);
-        keyboardRowList.add(keyboard2Row);
+/*        keyboardRowList.add(keyboard2Row);
         keyboardRowList.add(keyboard3Row);
         keyboardRowList.add(keyboard4Row);
-        keyboardRowList.add(keyboard5Row);
+        keyboardRowList.add(keyboard5Row);*/
         keyboardRowList.add(keyboard6Row);
         keyboardMarkup.setKeyboard(keyboardRowList);
     }
@@ -192,21 +198,15 @@ public class Bot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
 
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Журналист"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Строитель"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("3").setCallbackData("Программист"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("4").setCallbackData("Врач"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("5").setCallbackData("Полицейский"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("6").setCallbackData("Учитель"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("7").setCallbackData("Архитектор"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("8").setCallbackData("Бухгалтер"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("9").setCallbackData("Юрист"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("10").setCallbackData("Дизайнер"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Полицейский"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Программист"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("3").setCallbackData("Врач"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("4").setCallbackData("Бухгалтер"));
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
         inlineKeyboardMarkup.setKeyboard(rowList); //добавляем кнопки в разметку инлайн клавиатуры
-        return new SendMessage().setChatId(chatId).setText("Выбери ПРОФЕССИЮ из списка:\n1. Журналист\n2. Строитель\n3. Программист\n4. Врач\n5. Полицейский\n6. Учитель\n7. Архитектор\n8. Бухгалтер\n9. Юрист\n10. Дизайнер").setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
+        return new SendMessage().setChatId(chatId).setText("Выбери ПРОФЕССИЮ из списка:\n1. Полицейский\n2. Программист\n3. Врач\n4. Бухгалтер").setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
     }
 
     public static EditMessageText sendGenreInlineKeyBoardMessage(long chatId){
@@ -214,21 +214,15 @@ public class Bot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
 
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Смешные"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Душевные"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("3").setCallbackData("Серьезные"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("4").setCallbackData("В стихах"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("5").setCallbackData("Диалог"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("6").setCallbackData("Длинные"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("7").setCallbackData("Короткие"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("8").setCallbackData("В прозе"));
-        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("РАНДОМ").setCallbackData("Рандом"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("В стихах"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Диалог"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("РАНДОМ").setCallbackData("Рандом"));
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
         inlineKeyboardMarkup.setKeyboard(rowList); //добавляем кнопки в разметку инлайн клавиатуры
-        return new EditMessageText().setText("Выбери ЖАНР из списка:\n1. Смешные \n2. Душевные \n3. Серьезные \n4. В стихах \n5. Диалог \n6. Длинные \n7. Короткие \n8. В прозе").setChatId(chatId).setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
+        return new EditMessageText().setText("Выбери ЖАНР из списка:\n1. В стихах \n2. Диалог").setChatId(chatId).setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
     }
 
     public String getBotUsername() {
