@@ -2,6 +2,7 @@ package models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "genre", schema = "public", catalog = "d4qb1euqb2hibb")
@@ -50,10 +51,8 @@ public class GenreEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "genreByIdGenre")
-    public Collection<ToastsEntity> getToastsByIdGenre() {
-        return toastsByIdGenre;
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre")
+    private Set<ToastsEntity> toasts;
 
     public void setToastsByIdGenre(Collection<ToastsEntity> toastsByIdGenre) {
         this.toastsByIdGenre = toastsByIdGenre;

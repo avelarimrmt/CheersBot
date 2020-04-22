@@ -2,6 +2,7 @@ package models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "toasts", schema = "public", catalog = "d4qb1euqb2hibb")
@@ -9,8 +10,6 @@ public class ToastsEntity {
     private int idToast;
     private String valueToast;
     private int idGenre;
-    private GenreEntity genreByIdGenre;
-    private Collection<ToastsProfEntity> toastsProfsByIdToast;
 
     @Id
     @Column(name = "id_toast")
@@ -64,22 +63,13 @@ public class ToastsEntity {
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "id_genre", referencedColumnName = "id_genre", nullable = false)
-    public GenreEntity getGenreByIdGenre() {
-        return genreByIdGenre;
-    }
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_genre")
+    private GenreEntity genre;
 
-    public void setGenreByIdGenre(GenreEntity genreByIdGenre) {
-        this.genreByIdGenre = genreByIdGenre;
-    }
-
-    @OneToMany(mappedBy = "toastsByIdToast")
-    public Collection<ToastsProfEntity> getToastsProfsByIdToast() {
-        return toastsProfsByIdToast;
-    }
-
-    public void setToastsProfsByIdToast(Collection<ToastsProfEntity> toastsProfsByIdToast) {
-        this.toastsProfsByIdToast = toastsProfsByIdToast;
-    }
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "toasts_prof",
+            joinColumns = @JoinColumn(name = "id_toast"),
+            inverseJoinColumns = @JoinColumn(name = "id_prof"))
+    private Set<ProfessionEntity> professions;
 }

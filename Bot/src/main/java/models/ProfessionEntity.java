@@ -2,13 +2,13 @@ package models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "profession", schema = "public", catalog = "d4qb1euqb2hibb")
 public class ProfessionEntity {
     private int idProf;
     private String nameProf;
-    private Collection<ToastsProfEntity> toastsProfsByIdProf;
 
     @Id
     @Column(name = "id_prof")
@@ -49,13 +49,6 @@ public class ProfessionEntity {
         result = 31 * result + (nameProf != null ? nameProf.hashCode() : 0);
         return result;
     }
-
-    @OneToMany(mappedBy = "professionByIdProf")
-    public Collection<ToastsProfEntity> getToastsProfsByIdProf() {
-        return toastsProfsByIdProf;
-    }
-
-    public void setToastsProfsByIdProf(Collection<ToastsProfEntity> toastsProfsByIdProf) {
-        this.toastsProfsByIdProf = toastsProfsByIdProf;
-    }
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "professions")
+    private Set<ToastsEntity> toasts;
 }
