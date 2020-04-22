@@ -9,7 +9,6 @@ import java.util.Set;
 public class GenreEntity {
     private int idGenre;
     private String nameGenre;
-    private Collection<ToastsEntity> toastsByIdGenre;
 
     @Id
     @Column(name = "id_genre")
@@ -53,8 +52,4 @@ public class GenreEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre")
     private Set<ToastsEntity> toasts;
-
-    public void setToastsByIdGenre(Collection<ToastsEntity> toastsByIdGenre) {
-        this.toastsByIdGenre = toastsByIdGenre;
-    }
 }
