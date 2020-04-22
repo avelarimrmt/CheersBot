@@ -1,5 +1,6 @@
 import com.vdurmont.emoji.EmojiParser;
 
+import models.ProfessionEntity;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -15,7 +16,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import service.ProfessionService;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +82,14 @@ public class Bot extends TelegramLongPollingBot {
     //Обработчик сообщений
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
+        ProfessionService professionService = new ProfessionService();
+        ProfessionEntity prof = null;
+        try {
+            prof = professionService.getById(1L);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(prof);
         if(message != null && message.hasText()){
             Long chatId = update.getMessage().getChatId();
             switch(message.getText()){
@@ -146,6 +157,7 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                     break;
+
                     /*new SendMessage().setText(
                                 update.getCallbackQuery().getData())
                                 .setChatId(update.getCallbackQuery().getMessage().getChatId())

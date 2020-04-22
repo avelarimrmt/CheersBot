@@ -7,13 +7,14 @@ import java.util.List;
 
 public class SqlRequests {
 
-    private List<ProfessionEntity> findProfession() {
+    public static List<ProfessionEntity> findProfession() {
         SessionUtil sessionUtil = new SessionUtil();
         sessionUtil.openTransactionSession();
 
         Session session = sessionUtil.getSession();
         Query query = session.createNativeQuery("select * from profession").addEntity(ProfessionEntity.class);
         List<ProfessionEntity> entities = query.list();
+        sessionUtil.closeTransactionSession();
         return entities;
     }
 }
