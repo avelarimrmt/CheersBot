@@ -39,7 +39,7 @@ public class ToastsService extends SessionUtil implements ToastsDAO {
         return toastsList;
     }
 
-    public ToastsEntity getById(Long id_toast) throws SQLException {
+    public ToastsEntity getById(int id_toast) throws SQLException {
         //open session with a transaction
         openTransactionSession();
 

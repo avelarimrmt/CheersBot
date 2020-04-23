@@ -13,7 +13,7 @@ public class JavaPostgreSqlPrepared {
     private static String password = "162bee697eda890e5b9bf10f45d1893405b08b7a42295f2521cfde070297a146";
 
     private static Connection con;
-    private static  PreparedStatement preparedStatement = null;
+    private static PreparedStatement preparedStatement = null;
 
     public static void main(String[] args) {
 
@@ -24,9 +24,12 @@ public class JavaPostgreSqlPrepared {
         try
         {
             PreparedStatement pst = con.prepareStatement("SELECT value_toast FROM toasts WHERE id_toast =?");
-            ResultSet rs = pst.executeQuery();
             pst.setInt(1, id_profession);
+            ResultSet rs = pst.executeQuery();
+            while(rs.next()) {
+                System.out.println(rs.getString(1));
                 return rs.getString(1);
+            }
         } catch (SQLException ex) {
             Logger lgr = Logger.getLogger(JavaPostgreSqlPrepared.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);

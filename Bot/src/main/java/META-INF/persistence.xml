@@ -6,7 +6,7 @@
         <class>models.GenreEntity</class>
         <class>models.ProfessionEntity</class>
         <class>models.ToastsEntity</class>
-        <class>models.ToastsProfEntity</class>
+
         <properties>
             <property name="hibernate.connection.url" value="jdbc:postgresql://ec2-54-157-78-113.compute-1.amazonaws.com:5432/d4qb1euqb2hibb"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>

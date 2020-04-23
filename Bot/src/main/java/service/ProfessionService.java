@@ -39,7 +39,7 @@ public class ProfessionService extends SessionUtil implements ProfessionDAO {
         return professionList;
     }
 
-    public ProfessionEntity getById(Long id_prof) throws SQLException {
+    public ProfessionEntity getById(int id_pr) throws SQLException {
         //open session with a transaction
         openTransactionSession();
 
@@ -47,7 +47,7 @@ public class ProfessionService extends SessionUtil implements ProfessionDAO {
 
         Session session = getSession();
         Query query = session.createNativeQuery(sql).addEntity(ProfessionEntity.class);
-        query.setParameter("id", id_prof);
+        query.setParameter("id", id_pr);
 
         ProfessionEntity profession = (ProfessionEntity) query.getSingleResult();
 

@@ -13,7 +13,7 @@ public interface GenreDAO {
     //read
     List<GenreEntity> getAll() throws SQLException;
 
-    GenreEntity getById(Long id_genre) throws SQLException;
+    GenreEntity getById(int id_genre) throws SQLException;
 
     //update
     void update(GenreEntity genre) throws SQLException;

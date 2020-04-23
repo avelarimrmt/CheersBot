@@ -1,3 +1,4 @@
+import bl.HibernateUtil;
 import com.vdurmont.emoji.EmojiParser;
 
 import models.ProfessionEntity;
@@ -82,14 +83,15 @@ public class Bot extends TelegramLongPollingBot {
     //Обработчик сообщений
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
-        ProfessionService professionService = new ProfessionService();
+        /*ProfessionService professionService = new ProfessionService();
         ProfessionEntity prof = null;
         try {
-            prof = professionService.getById(1L);
+            prof = professionService.getById(2L);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println(prof);
+        HibernateUtil.shutdown();*/
         if(message != null && message.hasText()){
             Long chatId = update.getMessage().getChatId();
             switch(message.getText()){
@@ -141,15 +143,18 @@ public class Bot extends TelegramLongPollingBot {
             CallbackQuery d = update.getCallbackQuery();
             System.out.println(d.getData());
             EditMessageText new_message = sendGenreInlineKeyBoardMessage(chat_id).setMessageId(toIntExact(message_id));
-            try {
-                execute(new_message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            System.out.println(SqlRequests.findProfession());
+            //System.out.println(JavaPostgreSqlPrepared.ChoiceProfession(1));
 
             switch (d.getData()){
                 case "Полицейский":
-                    System.out.println("done");
+                    System.out.println("done1");
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
                     try {
                         execute(new SendMessage().setText("Вы выбрали профессию Полицейский, теперь выберите жанр тоста выше")
                                 .setChatId(update.getCallbackQuery().getMessage().getChatId()));
@@ -157,7 +162,45 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                     break;
+                case "Программист":
+                    System.out.println("done2");
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
 
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Программист, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "Врач":
+                    System.out.println("done3");
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Врач, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "В стихах":
+                    System.out.println("doneGenre");
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Полицейский и жанр В стихах. Подождите, мы ищем ваш тост")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                     /*new SendMessage().setText(
                                 update.getCallbackQuery().getData())
                                 .setChatId(update.getCallbackQuery().getMessage().getChatId())
@@ -167,8 +210,6 @@ public class Bot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }*/
             }
-
-
         }
     }
 

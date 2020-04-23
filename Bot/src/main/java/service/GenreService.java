@@ -41,7 +41,7 @@ public class GenreService extends SessionUtil implements GenreDAO {
         return genreList;
     }
 
-    public GenreEntity getById(Long id_genre) throws SQLException {
+    public GenreEntity getById(int id_genre) throws SQLException {
         //open session with a transaction
         openTransactionSession();
 

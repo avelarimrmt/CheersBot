@@ -1,34 +1,35 @@
 package models;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "genre", schema = "public", catalog = "d4qb1euqb2hibb")
 public class GenreEntity {
-    private int idGenre;
-    private String nameGenre;
-
     @Id
-    @Column(name = "id_genre")
-    public int getIdGenre() {
-        return idGenre;
-    }
-
-    public void setIdGenre(int idGenre) {
-        this.idGenre = idGenre;
-    }
+    @Column(name = "id_genre", )
+    private int idGenre;
 
     @Basic
     @Column(name = "name_genre")
-    public String getNameGenre() {
+    private String nameGenre;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre")
+    private Set<ToastsEntity> toasts;
+
+    public void setId(int genreId) {
+        this.idGenre = genreId;
+    }
+
+    public String getGenreName() {
         return nameGenre;
     }
 
-    public void setNameGenre(String nameGenre) {
-        this.nameGenre = nameGenre;
+    public void setGenreName(String profName) {
+        this.nameGenre = profName;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -37,19 +38,25 @@ public class GenreEntity {
 
         GenreEntity that = (GenreEntity) o;
 
-        if (idGenre != that.idGenre) return false;
-        if (nameGenre != null ? !nameGenre.equals(that.nameGenre) : that.nameGenre != null) return false;
-
-        return true;
+        return (idGenre != that.idGenre) &&
+                Objects.equals(nameGenre, that.nameGenre);
     }
 
     @Override
     public int hashCode() {
-        int result = idGenre;
-        result = 31 * result + (nameGenre != null ? nameGenre.hashCode() : 0);
-        return result;
+        return Objects.hash(idGenre, nameGenre);
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre")
-    private Set<ToastsEntity> toasts;
+    @Override
+    public String toString() {
+        return "GenreEntity{" +
+                "genreId=" + idGenre +
+                ", genreName='" + nameGenre + '\'' +
+                '}';
+    }
+
+    public Set<ToastsEntity> getToasts() {
+        return toasts;
+    }
+
 }

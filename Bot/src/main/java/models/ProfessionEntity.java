@@ -1,34 +1,39 @@
 package models;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "profession", schema = "public", catalog = "d4qb1euqb2hibb")
 public class ProfessionEntity {
-    private int idProf;
-    private String nameProf;
-
     @Id
     @Column(name = "id_prof")
-    public int getIdProf() {
-        return idProf;
-    }
-
-    public void setIdProf(int idProf) {
-        this.idProf = idProf;
-    }
+    private int idProf;
 
     @Basic
     @Column(name = "name_prof")
-    public String getNameProf() {
+    private String nameProf;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "professions")
+    private Set<ToastsEntity> toasts;
+
+    public int getId() {
+        return idProf;
+    }
+
+    public void setId(int profId) {
+        this.idProf = profId;
+    }
+
+    public String getProfName() {
         return nameProf;
     }
 
-    public void setNameProf(String nameProf) {
-        this.nameProf = nameProf;
+    public void setProfName(String profName) {
+        this.nameProf = profName;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -37,18 +42,24 @@ public class ProfessionEntity {
 
         ProfessionEntity that = (ProfessionEntity) o;
 
-        if (idProf != that.idProf) return false;
-        if (nameProf != null ? !nameProf.equals(that.nameProf) : that.nameProf != null) return false;
-
-        return true;
+        return (idProf != that.idProf) &&
+                Objects.equals(nameProf, that.nameProf);
     }
 
     @Override
     public int hashCode() {
-        int result = idProf;
-        result = 31 * result + (nameProf != null ? nameProf.hashCode() : 0);
-        return result;
+        return Objects.hash(idProf, nameProf);
     }
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "professions")
-    private Set<ToastsEntity> toasts;
+
+    @Override
+    public String toString() {
+        return "ProfessionEntity{" +
+                "profId=" + idProf +
+                ", profName='" + nameProf + '\'' +
+                '}';
+    }
+
+    public Set<ToastsEntity> getToasts() {
+        return toasts;
+    }
 }

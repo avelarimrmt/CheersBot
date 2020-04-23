@@ -13,7 +13,7 @@ public interface ProfessionDAO {
     //read
     List<ProfessionEntity> getAll() throws SQLException;
 
-    ProfessionEntity getById(Long id_prof) throws SQLException;
+    ProfessionEntity getById(int id_prof) throws SQLException;
 
     //update
     void update(ProfessionEntity profession) throws SQLException;

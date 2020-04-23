@@ -12,7 +12,8 @@ public class SqlRequests {
         sessionUtil.openTransactionSession();
 
         Session session = sessionUtil.getSession();
-        Query query = session.createNativeQuery("select * from profession").addEntity(ProfessionEntity.class);
+
+        Query query = session.createNativeQuery("select name_prof from profession where id_prof = 1").addEntity(ProfessionEntity.class);
         List<ProfessionEntity> entities = query.list();
         sessionUtil.closeTransactionSession();
         return entities;

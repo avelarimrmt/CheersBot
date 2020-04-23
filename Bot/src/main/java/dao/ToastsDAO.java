@@ -13,7 +13,7 @@ public interface ToastsDAO {
     //read
     List<ToastsEntity> getAll() throws SQLException;
 
-    ToastsEntity getById(Long id_toast) throws SQLException;
+    ToastsEntity getById(int id_toast) throws SQLException;
 
     //update
     void update(ToastsEntity toasts) throws SQLException;
