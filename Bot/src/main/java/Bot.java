@@ -95,7 +95,7 @@ public class Bot extends TelegramLongPollingBot {
         if(message != null && message.hasText()){
             Long chatId = update.getMessage().getChatId();
             switch(message.getText()){
-                case "Сгенерировать тост":
+                case "\uD83C\uDF7EСгенерировать тост":
                     try {
                         execute(sendProfessionInlineKeyBoardMessage(update.getMessage().getChatId()));
                     } catch (TelegramApiException e) {
@@ -163,6 +163,7 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "Программист":
+                    SqlRequests.findProfession(text);
                     try {
                         execute(new_message);
                     } catch (TelegramApiException e) {
@@ -177,6 +178,7 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "Врач":
+                    SqlRequests.findProfession(text);
                     try {
                         execute(new_message);
                     } catch (TelegramApiException e) {
@@ -190,8 +192,24 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                     break;
+                case "Бухгалтер":
+                    SqlRequests.findProfession(text);
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Бухгалтер, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case "Стихи":
-                    textMessage = SqlRequests.findGenre("Стихи");
+                case "Диалог":
+                    textMessage = SqlRequests.findGenre(text);
                     try {
                         execute(new SendMessage().setText(textMessage)
                                 .setChatId(update.getCallbackQuery().getMessage().getChatId()));
@@ -218,7 +236,7 @@ public class Bot extends TelegramLongPollingBot {
         KeyboardRow keyboard5Row = new KeyboardRow();*/
         KeyboardRow keyboard6Row = new KeyboardRow();
 
-        keyboard1Row.add(new KeyboardButton("Сгенерировать тост"));
+        keyboard1Row.add(new KeyboardButton(Icon.GLASS.get() + "Сгенерировать тост"));
 /*        keyboard2Row.add(new KeyboardButton(Icon.GLASS.get() + "Мои тосты"));
         keyboard2Row.add(new KeyboardButton(Icon.STAR.get() + "Избранное"));
         keyboard3Row.add(new KeyboardButton(Icon.CUP.get() + "ТОП тостов"));
