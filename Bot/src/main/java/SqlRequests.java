@@ -37,7 +37,7 @@ private static ProfessionEntity prof;
             }
 
             int rand = toasts.size();
-            int a = (int) (Math.random() * rand - 1);
+            int a = (int) (Math.random() * (rand - 1));
             String str = toasts.get(a);
 
             return str;

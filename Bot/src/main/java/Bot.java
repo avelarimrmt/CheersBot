@@ -67,11 +67,9 @@ public class Bot extends TelegramLongPollingBot {
         s.setChatId(message.getChatId().toString()); //Определяем, в какой чат отправляем ответ
         s.setReplyToMessageId(message.getMessageId()); //Определяем, на какое сообщение отвечаем
         s.setText(text);
-        //String msg = "SELECT value_toast FROM toasts ORDER BY RANDOM() limit 1;";
         setMainButtons(s);
 
         try{
-            //setMainButtons(s); //появление клавиатуры после сообщения
             execute(s);
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -83,15 +81,6 @@ public class Bot extends TelegramLongPollingBot {
     //Обработчик сообщений
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
-        /*ProfessionService professionService = new ProfessionService();
-        ProfessionEntity prof = null;
-        try {
-            prof = professionService.getById(2L);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println(prof);
-        HibernateUtil.shutdown();*/
         if(message != null && message.hasText()){
             Long chatId = update.getMessage().getChatId();
             switch(message.getText()){
@@ -102,26 +91,11 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                     break;
-                /*case "\uD83C\uDF7EМои тосты":
-                    sendMessageReply(message, "Это ваши сохраненные тосты");
-                    break;
-                case "⭐Избранное":
-                    sendMessageReply(message, "Здесь ваши самые любимые тосты!");
-                    break;
-                case "\uD83C\uDFC6ТОП тостов":
-                    sendMessageReply(message, "Посмотрите самые популярные тосты за месяц!");
-                    break;
-                case "✍Добавить свой тост":
-                    sendMessageReply(message, "Напишите свой тост и добавьте его для всех пользователей!");
-                    break;
-                case "✌Мой рейтинг":
-                    sendMessageReply(message, "Здесь ваш рейтинг тостов");
-                    break;*/
                 case "\uD83D\uDE4FПомощь":
                     sendMessageReply(message, "Чтобы получить тост:\n" +
                             "1)\tнажмите кнопку «Сгенерировать тост»\n" +
                             "2)\tзатем выберите профессию, кликнув по нужному номеру профессии\n" +
-                            "3)\tдалее выберите жанр, кликнув по номеру жанра или нажмите на кнопку «РАНДОМ», чтобы не ограничиваться жанром.\n" +
+                            "3)\tдалее выберите жанр, кликнув по номеру жанра.\n" +
                             "По всем вопросам и пожеланиям пишите @mrm\\_avelari");
                     break;
                 case "/":
@@ -137,18 +111,15 @@ public class Bot extends TelegramLongPollingBot {
             }
         } else if (update.hasCallbackQuery())
         {
-            String call_data = update.getCallbackQuery().getData();
             long message_id = update.getCallbackQuery().getMessage().getMessageId();
             long chat_id = update.getCallbackQuery().getMessage().getChatId();
             CallbackQuery d = update.getCallbackQuery();
             EditMessageText new_message = sendGenreInlineKeyBoardMessage(chat_id).setMessageId(toIntExact(message_id));
             String text = d.getData();
-            ProfessionEntity messageProf = new ProfessionEntity();
             String textMessage;
             switch (text){
                 case "Полицейский":
                     SqlRequests.findProfession(text);
-                    //SqlRequests.findProfession(d.getData());
                     try {
                         execute(new_message);
                     } catch (TelegramApiException e) {
@@ -230,25 +201,12 @@ public class Bot extends TelegramLongPollingBot {
 
         ArrayList<KeyboardRow> keyboardRowList = new ArrayList<>();
         KeyboardRow keyboard1Row = new KeyboardRow();
-/*        KeyboardRow keyboard2Row = new KeyboardRow();
-        KeyboardRow keyboard3Row = new KeyboardRow();
-        KeyboardRow keyboard4Row = new KeyboardRow();
-        KeyboardRow keyboard5Row = new KeyboardRow();*/
         KeyboardRow keyboard6Row = new KeyboardRow();
 
         keyboard1Row.add(new KeyboardButton(Icon.GLASS.get() + "Сгенерировать тост"));
-/*        keyboard2Row.add(new KeyboardButton(Icon.GLASS.get() + "Мои тосты"));
-        keyboard2Row.add(new KeyboardButton(Icon.STAR.get() + "Избранное"));
-        keyboard3Row.add(new KeyboardButton(Icon.CUP.get() + "ТОП тостов"));
-        keyboard4Row.add(new KeyboardButton(Icon.WRITE.get() + "Добавить свой тост"));
-        keyboard5Row.add(new KeyboardButton(Icon.PEACE.get() + "Мой рейтинг"));*/
         keyboard6Row.add(new KeyboardButton(Icon.HELP.get() + "Помощь"));
 
         keyboardRowList.add(keyboard1Row);
-/*        keyboardRowList.add(keyboard2Row);
-        keyboardRowList.add(keyboard3Row);
-        keyboardRowList.add(keyboard4Row);
-        keyboardRowList.add(keyboard5Row);*/
         keyboardRowList.add(keyboard6Row);
         keyboardMarkup.setKeyboard(keyboardRowList);
     }
@@ -276,7 +234,6 @@ public class Bot extends TelegramLongPollingBot {
 
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Стихи"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Диалог"));
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("РАНДОМ").setCallbackData("Рандом"));
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
