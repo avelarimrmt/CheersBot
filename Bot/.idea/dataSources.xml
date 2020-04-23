@@ -7,5 +7,15 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://ec2-54-157-78-113.compute-1.amazonaws.com:5432/d4qb1euqb2hibb</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="184f1ceb-5f0a-4c71-97a0-77f3a566206a">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate
+
+C:/GitHub/CheersBot/Bot/src/main/resources/hibernate.cfg.xml</remarks>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-54-157-78-113.compute-1.amazonaws.com:5432/d4qb1euqb2hibb</jdbc-url>
+    </data-source>
   </component>
 </project>

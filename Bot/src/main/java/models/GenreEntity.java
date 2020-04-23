@@ -8,7 +8,7 @@ import java.util.Set;
 @Table(name = "genre", schema = "public", catalog = "d4qb1euqb2hibb")
 public class GenreEntity {
     @Id
-    @Column(name = "id_genre", )
+    @Column(name = "id_genre" )
     private int idGenre;
 
     @Basic
@@ -18,16 +18,21 @@ public class GenreEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre")
     private Set<ToastsEntity> toasts;
 
-    public void setId(int genreId) {
-        this.idGenre = genreId;
+    public int getIdGenre() {
+        return idGenre;
+    }
+
+    public void setIdGenre(int idGenre) {
+
+        this.idGenre = idGenre;
     }
 
     public String getGenreName() {
         return nameGenre;
     }
 
-    public void setGenreName(String profName) {
-        this.nameGenre = profName;
+    public void setGenreName(String nameGenre) {
+        this.nameGenre = nameGenre;
     }
 
 
@@ -54,9 +59,4 @@ public class GenreEntity {
                 ", genreName='" + nameGenre + '\'' +
                 '}';
     }
-
-    public Set<ToastsEntity> getToasts() {
-        return toasts;
-    }
-
 }

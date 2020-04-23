@@ -15,43 +15,41 @@ public class ToastsEntity {
     @Column(name = "value_toast")
     private String valueToast;
 
-    @Basic
-    @Column(name = "id_genre")
-    private int idGenre;
-
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_genre")
     private GenreEntity genre;
+
+    public GenreEntity getIdGenre() {
+        return genre;
+    }
+
+    public void setIdGenre(GenreEntity genreId) {
+        this.genre = genreId;
+    }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "toasts_prof",
             joinColumns = @JoinColumn(name = "id_toast"),
             inverseJoinColumns = @JoinColumn(name = "id_prof"))
-    private Set<ProfessionEntity> professions;
+    private Set<ProfessionEntity> profession;
 
     public int getIdToast() {
         return idToast;
     }
 
-    public void setIdToast(int toastId) {
-        this.idToast = toastId;
+    public void setIdToast(int idToast) {
+        this.idToast = idToast;
     }
 
     public String getValueToast() {
         return valueToast;
     }
 
-    public void setValueToast(String toastValue) {
-        this.valueToast = toastValue;
+    public void setValueToast(String valueToast) {
+        this.valueToast = valueToast;
     }
 
-    public int getIdGenre() {
-        return idGenre;
-    }
 
-    public void setIdGenre(int genreId) {
-        this.idGenre = genreId;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -61,29 +59,36 @@ public class ToastsEntity {
         ToastsEntity that = (ToastsEntity) o;
 
         return (idToast != that.idToast) &&
-                Objects.equals(valueToast, that.valueToast) &&
-                Objects.equals(idGenre, that.idGenre);
+                Objects.equals(valueToast, that.valueToast);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idToast, valueToast, idGenre);
+        return Objects.hash(idToast, valueToast);
     }
 
     @Override
     public String toString() {
         return "ToastsEntity{" +
-                "profId=" + idToast +
-                ", profName='" + valueToast + '\'' +
-                ", profName='" + idGenre + '\'' +
+                "toastId=" + idToast +
+                ", valueToast='" + valueToast + '\'' +
                 '}';
+    }
+
+    public GenreEntity getGenre() {
+        return genre;
     }
 
     public void setGenre(GenreEntity genre) {
         this.genre = genre;
     }
 
-    public Set<ProfessionEntity> getProfessions() {
-        return professions;
+    public Set<ProfessionEntity> getProfession() {
+        return profession;
     }
+
+    public void setProfession(Set<ProfessionEntity> profession) {
+        this.profession = profession;
+    }
+
 }

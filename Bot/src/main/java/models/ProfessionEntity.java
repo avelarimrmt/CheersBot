@@ -1,6 +1,7 @@
 package models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,14 +16,14 @@ public class ProfessionEntity {
     @Column(name = "name_prof")
     private String nameProf;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "professions")
-    private Set<ToastsEntity> toasts;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "profession")
+    private List<ToastsEntity> toasts;
 
-    public int getId() {
+    public int getIdProf() {
         return idProf;
     }
 
-    public void setId(int profId) {
+    public void setIdProf(int profId) {
         this.idProf = profId;
     }
 
@@ -59,7 +60,11 @@ public class ProfessionEntity {
                 '}';
     }
 
-    public Set<ToastsEntity> getToasts() {
+    public List<ToastsEntity> getToasts() {
         return toasts;
+    }
+
+    public void setToasts(List<ToastsEntity> toasts) {
+        this.toasts = toasts;
     }
 }

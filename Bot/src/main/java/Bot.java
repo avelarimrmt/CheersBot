@@ -141,14 +141,14 @@ public class Bot extends TelegramLongPollingBot {
             long message_id = update.getCallbackQuery().getMessage().getMessageId();
             long chat_id = update.getCallbackQuery().getMessage().getChatId();
             CallbackQuery d = update.getCallbackQuery();
-            System.out.println(d.getData());
             EditMessageText new_message = sendGenreInlineKeyBoardMessage(chat_id).setMessageId(toIntExact(message_id));
-            System.out.println(SqlRequests.findProfession());
-            //System.out.println(JavaPostgreSqlPrepared.ChoiceProfession(1));
-
-            switch (d.getData()){
+            String text = d.getData();
+            ProfessionEntity messageProf = new ProfessionEntity();
+            String textMessage;
+            switch (text){
                 case "Полицейский":
-                    System.out.println("done1");
+                    SqlRequests.findProfession(text);
+                    //SqlRequests.findProfession(d.getData());
                     try {
                         execute(new_message);
                     } catch (TelegramApiException e) {
@@ -163,7 +163,6 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "Программист":
-                    System.out.println("done2");
                     try {
                         execute(new_message);
                     } catch (TelegramApiException e) {
@@ -178,7 +177,6 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "Врач":
-                    System.out.println("done3");
                     try {
                         execute(new_message);
                     } catch (TelegramApiException e) {
@@ -192,23 +190,15 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                     break;
-                case "В стихах":
-                    System.out.println("doneGenre");
+                case "Стихи":
+                    textMessage = SqlRequests.findGenre("Стихи");
                     try {
-                        execute(new SendMessage().setText("Вы выбрали профессию Полицейский и жанр В стихах. Подождите, мы ищем ваш тост")
+                        execute(new SendMessage().setText(textMessage)
                                 .setChatId(update.getCallbackQuery().getMessage().getChatId()));
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
                     break;
-                    /*new SendMessage().setText(
-                                update.getCallbackQuery().getData())
-                                .setChatId(update.getCallbackQuery().getMessage().getChatId())
-                    try {
-                    execute(sendGenreInlineKeyBoardMessage(update.getMessage().getChatId()));
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }*/
             }
         }
     }
@@ -266,7 +256,7 @@ public class Bot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
 
-        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("В стихах"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Стихи"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Диалог"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("РАНДОМ").setCallbackData("Рандом"));
 
@@ -274,7 +264,7 @@ public class Bot extends TelegramLongPollingBot {
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
         inlineKeyboardMarkup.setKeyboard(rowList); //добавляем кнопки в разметку инлайн клавиатуры
-        return new EditMessageText().setText("Выбери ЖАНР из списка:\n1. В стихах \n2. Диалог").setChatId(chatId).setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
+        return new EditMessageText().setText("Выбери ЖАНР из списка:\n1. Стихи \n2. Диалог").setChatId(chatId).setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
     }
 
     public String getBotUsername() {
