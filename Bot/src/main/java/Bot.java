@@ -1,7 +1,5 @@
-import bl.HibernateUtil;
 import com.vdurmont.emoji.EmojiParser;
 
-import models.ProfessionEntity;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -17,24 +15,18 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import service.ProfessionService;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.toIntExact;
 
-//import static java.awt.DefaultKeyboardFocusManager.sendMessage;
+
 
 //Смайлики, используемые в сообщениях и кнопках
 enum Icon {
 
     GLASS(":champagne:"),
-    STAR(":star:"),
-    CUP(":trophy:"),
-    WRITE(":writing_hand:"),
-    PEACE(":v:"),
     HELP(":pray:");
 
     private String value;
@@ -178,9 +170,79 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                     break;
+                case "Учитель":
+                    SqlRequests.findProfession(text);
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Учитель, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "Строитель":
+                    SqlRequests.findProfession(text);
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Строитель, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "Инженер":
+                    SqlRequests.findProfession(text);
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Инженер, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "Психолог":
+                    SqlRequests.findProfession(text);
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        execute(new SendMessage().setText("Вы выбрали профессию Психолог, теперь выберите жанр тоста выше")
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case "Стихи":
                 case "Диалог":
+                case "Душевные":
                     textMessage = SqlRequests.findGenre(text);
+                    try {
+                        execute(new SendMessage().setText(textMessage)
+                                .setChatId(update.getCallbackQuery().getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "РАНДОМ":
+                    textMessage = SqlRequests.getRandomGenre();
                     try {
                         execute(new SendMessage().setText(textMessage)
                                 .setChatId(update.getCallbackQuery().getMessage().getChatId()));
@@ -220,11 +282,18 @@ public class Bot extends TelegramLongPollingBot {
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Программист"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("3").setCallbackData("Врач"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("4").setCallbackData("Бухгалтер"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("5").setCallbackData("Учитель"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("6").setCallbackData("Строитель"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("7").setCallbackData("Инженер"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("8").setCallbackData("Психолог"));
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
         inlineKeyboardMarkup.setKeyboard(rowList); //добавляем кнопки в разметку инлайн клавиатуры
-        return new SendMessage().setChatId(chatId).setText("Выбери ПРОФЕССИЮ из списка:\n1. Полицейский\n2. Программист\n3. Врач\n4. Бухгалтер").setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
+        return new SendMessage()
+                .setChatId(chatId)
+                .setText("Выбери ПРОФЕССИЮ из списка:\n1. Полицейский\n2. Программист\n3. Врач\n4. Бухгалтер\n5. Учитель\n6. Строитель\n7. Инженер\n8. Психолог")
+                .setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
     }
 
     public static EditMessageText sendGenreInlineKeyBoardMessage(long chatId){
@@ -234,12 +303,14 @@ public class Bot extends TelegramLongPollingBot {
 
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("1").setCallbackData("Стихи"));
         keyboardButtonsRow1.add(new InlineKeyboardButton().setText("2").setCallbackData("Диалог"));
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("3").setCallbackData("Душевные"));
+        keyboardButtonsRow2.add(new InlineKeyboardButton().setText("РАНДОМ").setCallbackData("РАНДОМ"));
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
         inlineKeyboardMarkup.setKeyboard(rowList); //добавляем кнопки в разметку инлайн клавиатуры
-        return new EditMessageText().setText("Выбери ЖАНР из списка:\n1. Стихи \n2. Диалог").setChatId(chatId).setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
+        return new EditMessageText().setText("Выбери ЖАНР из списка:\n1. Стихи \n2. Диалог \n3. Душевные").setChatId(chatId).setReplyMarkup(inlineKeyboardMarkup); //добавлем разметку в сообщение
     }
 
     public String getBotUsername() {
